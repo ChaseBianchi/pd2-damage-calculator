@@ -38,7 +38,7 @@
     </property>
     <item>
      <property name="text">
-      <string/>
+      <string>select</string>
      </property>
     </item>
     <item>
@@ -163,7 +163,7 @@
     </property>
     <item>
      <property name="text">
-      <string/>
+      <string>select</string>
      </property>
     </item>
     <item>
@@ -207,7 +207,7 @@
      </rect>
     </property>
     <property name="text">
-     <string/>
+      <string>select</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -224,7 +224,7 @@
     </property>
     <item>
      <property name="text">
-      <string/>
+      <string>select</string>
      </property>
     </item>
    </widget>
@@ -261,7 +261,7 @@
      </rect>
     </property>
     <property name="text">
-     <string/>
+      <string>select</string>
     </property>
    </widget>
    <widget class="QComboBox" name="area_cbox">

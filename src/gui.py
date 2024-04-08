@@ -85,7 +85,7 @@ class MyGUI(QMainWindow):
             self.skill_button.setText("✔")
 
         elif self.skill_button.text() == "✔":
-            self.class_cbox.setCurrentText("")
+            self.class_cbox.setCurrentText("select")
             self.skill_cbox.clear()
             self.class_label.setVisible(True)
             self.class_cbox.setVisible(True)
@@ -105,7 +105,7 @@ class MyGUI(QMainWindow):
             self.mon_button.setText("✔")
 
         elif self.mon_button.text() == "✔":
-            self.mon_type_cbox.setCurrentText("")
+            self.mon_type_cbox.setCurrentText("select")
             self.tier_cbox.clear()
             self.area_cbox.clear()
             self.mon_cbox.clear()
@@ -260,8 +260,8 @@ class MyGUI(QMainWindow):
         self.area_cbox.clear()
         self.mon_cbox.clear()
         
-        self.tier_choice = None
-        self.area_choice = None
+        self.tier_choice = "select"
+        self.area_choice = "select"
 
         self.mon_type_choice = self.mon_type_cbox.currentText()
         if self.mon_type_choice == "Maps" or self.mon_type_choice == "Hell Mobs":
@@ -273,11 +273,11 @@ class MyGUI(QMainWindow):
         self.tier_cbox.clear()
         if self.mon_type_choice == "Hell Mobs":
             self.tier_label.setText("Act :")
-            self.tier_cbox.addItems(["", "Act 1", "Act 2", "Act 3", "Act 4", "Act 5"])
+            self.tier_cbox.addItems(["select", "Act 1", "Act 2", "Act 3", "Act 4", "Act 5"])
 
         elif self.mon_type_choice == "Maps":
             self.tier_label.setText("Tier:")
-            self.tier_cbox.addItems(["", "T1", "T2", "T3", "Dungeon", "Unique"])
+            self.tier_cbox.addItems(["select", "T1", "T2", "T3", "Dungeon", "Unique"])
 
     def area_selection(self):
         self.area_cbox.clear()
@@ -288,10 +288,10 @@ class MyGUI(QMainWindow):
         self.mon_cbox.setVisible(False)
 
         self.tier_choice = self.tier_cbox.currentText()
-        if self.tier_choice and self.tier_choice != "Dungeon":
+        if self.tier_choice and self.tier_choice != "select" and self.tier_choice != "Dungeon":
             self.area_label.setVisible(True)
             self.area_cbox.setVisible(True)
-            self.area_cbox.addItem("")
+            self.area_cbox.addItem("select")
             
             if self.mon_type_choice == "Hell Mobs":
                 self.area_label.setText("Area: ")
@@ -318,14 +318,14 @@ class MyGUI(QMainWindow):
         self.mobs_list = []
 
         # We need this check in case an empty option is selected in one of the # cboxes
-        if (self.mon_type_choice and self.mon_type_choice not in ["Hell Mobs", "Maps"]) or self.area_choice or self.tier_choice == "Dungeon":
+        if (self.mon_type_choice and self.mon_type_choice not in ["Hell Mobs", "Maps"]) or (self.area_choice and self.area_choice != "select") or self.tier_choice == "Dungeon":
             self.mon_label.setVisible(True)
             self.mon_cbox.setVisible(True)
 
         self.mobs_list = []
         # Have to do this because I didn't manually make id/strname pairs
         # for maps and dungeons
-        if self.mon_type_choice in ["Hell Mobs", "Maps"] and (self.area_choice or self.tier_choice == "Dungeon"):
+        if self.mon_type_choice in ["Hell Mobs", "Maps"] and ((self.area_choice and self.area_choice != "select") or self.tier_choice == "Dungeon"):
             mob_id_list = []
             if self.mon_type_choice == "Hell Mobs":
                 mob_id_list = self.mobs.hell_mobs_dic[self.area_choice]
@@ -346,14 +346,14 @@ class MyGUI(QMainWindow):
             self.mobs_list = self.id_dic[self.mon_type_choice]
 
         if self.mobs_list:
-            self.mon_cbox.addItem("")
+            self.mon_cbox.addItem("select")
             self.mon_cbox.addItems([name for _, name in self.mobs_list])
 
     def mob_resistance(self):
         self.monster_choice = self.mon_cbox.currentText()
 
         self.mob_resists = {}
-        if self.monster_choice and self.mon_button.text() == "X":
+        if self.monster_choice and self.monster_choice != "select" and self.mon_button.text() == "X":
             for id, name in self.mobs_list:
                 if self.monster_choice == name:
                     monster_id = id
@@ -398,7 +398,7 @@ class MyGUI(QMainWindow):
 
         self.damage_widgets_list = []
         self.damage_widgets_list.append((QLabel(), QLabel("<u>Min. Base Dmg</u>"), QLabel("<u>Max. Base Dmg</u>"), QLabel(), QLabel("<u>Min. Net Dmg</u>"), QLabel("<u>Max. Net Dmg</u>"), QLabel(), QLabel("<u>Effective Resistance</u>"), QLabel(), QLabel("<u>Effective Damage</u>")))
-        self.tooltips = ["", "After synergies, before mastery", "After synergies, before mastery", "", "Base * (1 + (mastery / 100))", "Base * (1 + (mastery / 100))", "", "Base resistance modified by break and pierce. See: https://projectdiablo2.miraheze.org/wiki/Game_Mechanics#Behavior_of_-enemy_resists", "", "Net * (1 - (effective monster resistance / 100))"]
+        self.tooltips = ["select", "After synergies, before mastery", "After synergies, before mastery", "select", "Base * (1 + (mastery / 100))", "Base * (1 + (mastery / 100))", "select", "Base resistance modified by break and pierce. See: https://projectdiablo2.miraheze.org/wiki/Game_Mechanics#Behavior_of_-enemy_resists", "select", "Net * (1 - (effective monster resistance / 100))"]
 
         for widget, txt in zip(self.damage_widgets_list[0], self.tooltips):
             widget.setToolTip(txt)
@@ -412,7 +412,7 @@ class MyGUI(QMainWindow):
         if self.skill_choice and self.skill_choice == "Blaze":
             self.damage_widgets_list[1][0].setText("Burn :")
 
-        self.add_widgets(self.damage_widgets_list, self.damage_grid, 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], Qt.AlignTop)
+        self.add_widgets(self.damage_widgets_list, self.damage_grid, 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], Qt.AlignJustify)
     
     def add_widgets(self, widgets_list, grid, row, cols, align, validator=None):
         for tuple in widgets_list:
