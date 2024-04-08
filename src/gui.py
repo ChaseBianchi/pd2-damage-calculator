@@ -37,6 +37,7 @@ class MyGUI(QMainWindow):
         self.area_cbox.setVisible(False)
         self.mon_label.setVisible(False)
         self.mon_cbox.setVisible(False)
+        self.curr_row = 0
 
         actions = self.menuInfo.actions()
         for action in actions:
@@ -205,7 +206,7 @@ class MyGUI(QMainWindow):
 
             pierce_widget = QLineEdit("0")    
             if self.skill_choice and ("Hydra" in self.skill_choice or "Sentry" in self.skill_choice):
-                pierce_widget.setReadOnly(True)
+                pierce_widget.setReadOnly(True) 
                 pierce_widget.setStyleSheet("border: none; background-color: #f0f0f0; color: black;")
 
             if ele_type == "Physical":
@@ -213,7 +214,7 @@ class MyGUI(QMainWindow):
             else:
                 self.ele_widgets_list.append((QLabel(f"{ele_type}: "), QLineEdit("0"), pierce_widget, QLineEdit("0"), mob_res_widget))
         
-        self.add_widgets(self.ele_widgets_list, self.elemental_grid, 0, [0, 1, 2, 3, 4], Qt.AlignTop, QIntValidator(0, 1000))
+        self.add_widgets(self.ele_widgets_list, self.elemental_grid, 0, [0, 1, 2, 3, 4], Qt.AlignJustify, QIntValidator(0, 1000))
         self.damage_widgets()
 
     def ele_widgets_without_skill_selection(self):
@@ -375,6 +376,7 @@ class MyGUI(QMainWindow):
         else:
             self.mob_resists = {ele: "0" for ele in ["Physical", "Magic", "Fire", "Lightning", "Cold", "Poison"]}
 
+        print(self.mob_resists)
         self.modify_elemental_widget()
 
     def modify_elemental_widget(self):
@@ -390,6 +392,7 @@ class MyGUI(QMainWindow):
                         widget = item.widget()
                         if widget:
                             widget.setText(self.mob_resists[type_2])
+                            print('set here')
                     current_row += 1
                     break
 
@@ -412,7 +415,8 @@ class MyGUI(QMainWindow):
         if self.skill_choice and self.skill_choice == "Blaze":
             self.damage_widgets_list[1][0].setText("Burn :")
 
-        self.add_widgets(self.damage_widgets_list, self.damage_grid, 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], Qt.AlignTop)
+        self.add_widgets(self.damage_widgets_list, self.damage_grid, self.curr_row, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], Qt.AlignTop)
+        self.curr_row += 1
     
     def add_widgets(self, widgets_list, grid, row, cols, align, validator=None):
         for tuple in widgets_list:
